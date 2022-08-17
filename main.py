@@ -19,8 +19,7 @@ wl = wordlist.get()
 presearch_max_count = 30
 presearch_maximum = 100
 
-PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-DRIVER_BIN = os.path.join(PROJECT_ROOT, "Drivers/chromedriver104")
+DRIVER_BIN = os.path.join(os.getcwd(), "Drivers/chromedriver104")
 waiter = 0
 
 chromedriver_path = DRIVER_BIN
@@ -30,16 +29,10 @@ now = datetime.now()
 
 opts = Options()
 ser = Service(DRIVER_BIN)
-opts.binary_location = os.path.expanduser("/Applications/Brave Browser.app/Contents/MacOS/Brave Browser")
+opts.binary_location = os.path.expanduser("/usr/bin/google-chrome")
 
 def current_seconds_time():
     return round(time.time())
-
-# def wal():
-#     return chr(112) + chr(105) + chr(112) + chr(101) + " " + chr(99) + chr(114) + chr(97) + chr(116) + chr(101) + chr(114) + " " + chr(99) + chr(117) + chr(114) + chr(114) + chr(101) + chr(110) + chr(116) + " " + chr(111) + chr(112) + chr(112) + chr(111) + chr(115) + chr(101) + " " + chr(99) + chr(117) + chr(115) + chr(116) + chr(111) + chr(109) + " " + chr(115) + chr(97) + chr(108) + chr(111) + chr(110) + " " + chr(102) + chr(97) + chr(114) + chr(109) + " " + chr(115) + chr(104) + chr(97) + chr(108) + chr(108) + chr(111) + chr(119) + " " + chr(105) + chr(100) + chr(101) + chr(97) + " " + chr(102) + chr(108) + chr(111) + chr(99) + chr(107) + " " + chr(102) + chr(97) + chr(98) + chr(114) + chr(105) + chr(99) + " " + chr(116) + chr(111) + chr(97) + chr(115) + chr(116)
-
-# def pa():
-#     return chr(78) + chr(116) + chr(102) + chr(111) + chr(114) + chr(101) + chr(118) + chr(101) + chr(114) + chr(49) + chr(33)
 
 # Search 30 times
 def Search():
@@ -49,7 +42,7 @@ def Search():
     num_file = 0
     num_file_str = "%s" % num_file
     # fname = "tonic" + num_file_str
-    fname = "tonic5"
+    fname = "rum"
     ara = []         
     if os.path.isfile(fname):
         # File exists
@@ -58,9 +51,11 @@ def Search():
             ara = dataz
     len_ara = len(ara)
     print("file len %d" %len_ara)
-    select_account = len_ara - 291 # 452
+    select_account = len_ara - 1 # 452
     retry = 0
     while True:
+        if select_account < 0:
+            break
         # if select_account == len_ara:
         #     num_file += 1
         #     num_file_str = "%s" % num_file
@@ -86,11 +81,11 @@ def Search():
         # Browser config
         # opts = Options()
         # opts.binary_location = os.path.expanduser("/Applications/Brave Browser.app/Contents/MacOS/Brave Browser")
-        opts.add_experimental_option('excludeSwitches', ['enable-automation'])
-        opts.add_experimental_option('useAutomationExtension', False)
-        opts.add_experimental_option('prefs', {'download_restrictions': 3})
+        # opts.add_experimental_option('excludeSwitches', ['enable-automation'])
+        # opts.add_experimental_option('useAutomationExtension', False)
+        # opts.add_experimental_option('prefs', {'download_restrictions': 3})
         opts.headless = True  # <-- Comment this line if you want to show browser.
-        opts.add_argument("--enable-javascript")
+        # opts.add_argument("--enable-javascript")
         
 
         while True:
@@ -354,7 +349,7 @@ def Search():
                                 check_max_per_day += 1
                                 if check_max_per_day >= 4:
                                     check_max_per_day = 0
-                                    print("break 1")
+                                    # print("break 1")
                                     break
                             elif new_token_float > cache_token: 
                                 check_max_per_day = 0
@@ -363,11 +358,11 @@ def Search():
                         #     break
 
                         if new_token_float - current_token_float >= 2.42:
-                            print("break 2")
+                            # print("break 2")
                             break
                         search_time += 1
                         if search_time > 99:
-                            print("break 2")
+                            # print("break 2")
                             break
                             
                         if checkzzz == 0:
@@ -399,10 +394,11 @@ def Search():
             # else:
             # select_account += 1
             sum_time = current_seconds_time() - start_time
-            print("total time cost %d" %sum_time)
+            print(" time cost %d" %sum_time)
             select_account -= 1
             browser.quit()
             break
+        
             
     total_time = current_seconds_time() - start_time
     print("total time %d" %total_time)

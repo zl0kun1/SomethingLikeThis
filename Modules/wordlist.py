@@ -6,7 +6,10 @@ import glob, os, random
 
 
 def get():
-    os.chdir('/Users/hungnguyen/Desktop/Desktop/test/PreSearch/Wordlist')
+    # os.path.abspath(os.path.dirname(__file__))
+    # os.path.join(PROJECT_ROOT, "Wordlist")
+    # os.chdir('/Users/hungnguyen/Desktop/Desktop/test/PreSearch/Wordlist')
+    os.chdir(os.path.join(os.getcwd(), "Wordlist"))
     dicts = glob.glob('*.txt')
     wordlist = []
     for dict in dicts:
