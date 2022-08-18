@@ -29,12 +29,12 @@ now = datetime.now()
 
 opts = Options()
 ser = Service(DRIVER_BIN)
-opts.binary_location = "/usr/bin/brave-browser"
+opts.binary_location = "/usr/bin/google-chrome"
 
+opts.add_argument("--headless")
 opts.add_argument("--remote-debugging-port=9222")
 opts.add_argument("--disable-extensions")
 opts.add_argument("--no-sandbox")
-opts.add_argument("--headless")
 opts.add_argument("--disable-dev-shm-usage")
 opts.add_argument("--disable-setuid-sandbox")
 
@@ -49,7 +49,7 @@ def Search():
     num_file = 0
     num_file_str = "%s" % num_file
     # fname = "tonic" + num_file_str
-    fname = "rum"
+    fname = "whiskey331"
     ara = []         
     if os.path.isfile(fname):
         # File exists
