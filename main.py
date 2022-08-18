@@ -19,7 +19,7 @@ wl = wordlist.get()
 presearch_max_count = 30
 presearch_maximum = 100
 
-DRIVER_BIN = os.path.join(os.getcwd(), "Drivers/chromedriver104")
+DRIVER_BIN = os.path.join(os.getcwd(), "Drivers/chromedriver104linux")
 waiter = 0
 
 chromedriver_path = DRIVER_BIN
@@ -29,7 +29,14 @@ now = datetime.now()
 
 opts = Options()
 ser = Service(DRIVER_BIN)
-opts.binary_location = os.path.expanduser("/usr/bin/google-chrome")
+opts.binary_location = "/usr/bin/brave-browser"
+
+opts.add_argument("--remote-debugging-port=9222")
+opts.add_argument("--disable-extensions")
+opts.add_argument("--no-sandbox")
+opts.add_argument("--headless")
+opts.add_argument("--disable-dev-shm-usage")
+opts.add_argument("--disable-setuid-sandbox")
 
 def current_seconds_time():
     return round(time.time())
@@ -84,16 +91,17 @@ def Search():
         # opts.add_experimental_option('excludeSwitches', ['enable-automation'])
         # opts.add_experimental_option('useAutomationExtension', False)
         # opts.add_experimental_option('prefs', {'download_restrictions': 3})
-        opts.headless = True  # <-- Comment this line if you want to show browser.
+        # opts.headless = True  # <-- Comment this line if you want to show browser.
         # opts.add_argument("--enable-javascript")
-        
+        opts.add_argument("--window-size=1920,1200")
+        opts.add_argument("--ignore-certificate-errors")
 
         while True:
             browser = webdriver.Chrome(options=opts, service=ser)
             # browser = webdriver.Firefox(executable_path=geckodriver)
-            browser.set_page_load_timeout(60)
-            browser.set_window_position(0, 0)
-            browser.maximize_window()
+            # browser.set_page_load_timeout(60)
+            # browser.set_window_position(0, 0)
+            # browser.maximize_window()
             browser.delete_all_cookies()
 
             print("email %s" %ara[select_account]["email"])
