@@ -49,7 +49,7 @@ def Search():
     num_file = 0
     num_file_str = "%s" % num_file
     # fname = "tonic" + num_file_str
-    fname = "tonic"
+    fname = "absinthe0"
     ara = []         
     if os.path.isfile(fname):
         # File exists
