@@ -49,7 +49,7 @@ def Search():
     num_file = 0
     num_file_str = "%s" % num_file
     # fname = "tonic" + num_file_str
-    fname = "absinthe1"
+    fname = "absinthe4"
     ara = []         
     if os.path.isfile(fname):
         # File exists
@@ -210,6 +210,11 @@ def Search():
                 time.sleep(30)
                 break
 
+            if '403 Forbidden' in browser.page_source or '403 Forbidden' in browser.title:
+                browser.quit()
+                time.sleep(20)
+                break
+
             try:
                 time.sleep(0.1)
                 browser.delete_all_cookies()
@@ -244,7 +249,7 @@ def Search():
                 time.sleep(0.1)
 
             if check_login == 0:
-                if retry == 2:
+                if retry == 3:
                     retry = 0
                     # select_account += 1
                     select_account -= 1
@@ -411,8 +416,15 @@ def Search():
     total_time = current_seconds_time() - start_time
     print("total time %d" %total_time)
     if total_time <= 86400:
-        print("sleep time %d" %(86400 - total_time))
-        time.sleep(86400 - total_time)
+        sleep_time = 86400 - total_time
+        if sleep_time > 0:
+            if sleep_time > 40000:
+                time.sleep(1)
+            else:
+                print("sleep time %d" %sleep_time)
+                time.sleep(sleep_time)
+    else:
+        time.sleep(0.1)
     Search()                
 
     #                 time.sleep(random.randint(15, 17))
