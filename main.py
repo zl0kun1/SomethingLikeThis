@@ -415,16 +415,7 @@ def Search():
             
     total_time = current_seconds_time() - start_time
     print("total time %d" %total_time)
-    if total_time <= 86400:
-        sleep_time = 86400 - total_time
-        if sleep_time > 0:
-            if sleep_time > 40000:
-                time.sleep(1)
-            else:
-                print("sleep time %d" %sleep_time)
-                time.sleep(sleep_time)
-    else:
-        time.sleep(0.1)
+    
     Search()                
 
     #                 time.sleep(random.randint(15, 17))
