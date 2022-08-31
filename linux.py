@@ -63,6 +63,13 @@ def Search():
     while True:
         if select_account < 0:
             break
+
+        print("email %s" %ara[select_account]["email"])
+        progress = ara[select_account]["progress"]
+        if progress == "done":
+            select_account -= 1
+            browser.quit()
+            continue
         # if select_account == len_ara:
         #     num_file += 1
         #     num_file_str = "%s" % num_file
@@ -104,12 +111,6 @@ def Search():
             # browser.maximize_window()
             browser.delete_all_cookies()
 
-            print("email %s" %ara[select_account]["email"])
-            progress = ara[select_account]["progress"]
-            if progress == "done":
-                select_account -= 1
-                browser.quit()
-                break
             
             # time.sleep(0.1)
             # while True:
