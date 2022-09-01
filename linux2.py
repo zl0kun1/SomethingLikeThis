@@ -90,7 +90,7 @@ def Login(browser, ara, select_account):
             print(ex)
             time.sleep(0.1)
             
-    capmonster = HCaptchaTask("41c354b19c2daca1c321c99bd2320239")
+    capmonster = HCaptchaTask("8efd657d0d151110a0be0d69c9dc0678")
     task_id = capmonster.create_task(browser.current_url, site_key)
     result = capmonster.join_task_result(task_id)
     res = result.get("gRecaptchaResponse")
