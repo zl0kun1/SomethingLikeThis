@@ -397,6 +397,9 @@ def Search():
                     # print(ex)
                     time.sleep(0.1)
             
+            if new_token_float > 0:
+                ara[select_account]["earned"] = str(new_token_float)
+                
             if check_spam < 100:
                 cookies = browser.get_cookies()
                 ara[select_account]["cookie"] = cookies
