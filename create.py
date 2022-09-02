@@ -15,8 +15,8 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from capmonster_python import HCaptchaTask
 
-namez = "dragon"
-fnamez = "champagne"
+namez = "peppermint"
+fnamez = "schnapps"
 app = 'PreSearch'
 register = 'https://account.presearch.org/signup?rid=2508931'
 url_base = "https://account.presearch.com/" 
