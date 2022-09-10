@@ -19,6 +19,7 @@ app = 'PreSearch'
 wl = wordlist.get()
 presearch_max_count = 30
 presearch_maximum = 100
+num_file = 0
 
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -90,7 +91,7 @@ def Login(browser, ara, select_account):
             print(ex)
             time.sleep(0.1)
             
-    capmonster = HCaptchaTask("8efd657d0d151110a0be0d69c9dc0678")
+    capmonster = HCaptchaTask("598b48215b82ea9237a706591ece6464")
     task_id = capmonster.create_task(browser.current_url, site_key)
     result = capmonster.join_task_result(task_id)
     res = result.get("gRecaptchaResponse")
@@ -122,7 +123,7 @@ def Login(browser, ara, select_account):
             print(ex)
             time.sleep(0.1)
     # Switch to the new window
-    time.sleep(1)
+    time.sleep(2)
     while True:
         try:
             browser.find_element(by=By.XPATH, value="//*[@class='container']/div/div/input[@placeholder='The secret key (in base-32 format)']").clear()
@@ -172,8 +173,70 @@ def Login(browser, ara, select_account):
         except Exception as ex:
             print(ex)
             time.sleep(0.1)
-
     time.sleep(2)
+    check_error = 0
+    try:
+        browser.find_element(by=By.XPATH, value="//div[@class='ajax-error form-group text-danger text-center']")
+        check_error = 1
+    except Exception as ex:
+        time.sleep(0.1)
+
+    time.sleep(0.1)
+    if check_error:
+        browser.switch_to.window(browser.window_handles[1])
+        time.sleep(1)
+
+        while True:
+            try:
+                browser.find_element(by=By.XPATH, value="//*[@class='container']/div/div/input[@placeholder='The secret key (in base-32 format)']").clear()
+                browser.find_element(by=By.XPATH, value="//*[@class='container']/div/div/input[@placeholder='The secret key (in base-32 format)']").send_keys(code)
+                break
+            except Exception as ex:
+                print(ex)
+
+        time.sleep(1)
+        fa = ""
+        while True:
+            try:
+                fa = browser.find_element(by=By.XPATH, value="//*[@class='container']/div/p[@class='title is-size-1 has-text-centered']").text
+                break
+            except Exception as ex:
+                time.sleep(0.1)
+                print(ex)
+
+        if not fa:
+            time.sleep(0.5)
+            while True:
+                try:
+                    fa = browser.find_element(by=By.XPATH, value="//*[@class='container']/div/p[@class='title is-size-1 has-text-centered']").text
+                    break
+                except Exception as ex:
+                    time.sleep(0.1)
+                    print(ex)
+
+        time.sleep(0.5)
+        browser.switch_to.window(browser.window_handles[0])
+
+        time.sleep(0.1)
+        while True:
+            try:
+                browser.find_element(by=By.XPATH, value="//input[@type='number']").clear()
+                browser.find_element(by=By.XPATH, value="//input[@type='number']").send_keys(fa)
+                break
+            except Exception as ex:
+                print(ex)
+                time.sleep(0.1)
+
+        time.sleep(0.1)
+        while True:
+            try:
+                browser.find_element(by=By.XPATH, value="//button[@class='btn btn-block btn-primary']").click()
+                break
+            except Exception as ex:
+                print(ex)
+                time.sleep(0.1)
+        time.sleep(2)
+
     while True:
         try:
             browser.get("https://presearch.com/")
@@ -186,13 +249,18 @@ def Login(browser, ara, select_account):
 
 # Search 30 times
 def Search():
+    global num_file
+    if num_file == 11:
+        num_file = 13
+        
+    if num_file > 14:
+        return
     start_time = current_seconds_time()
     func_path = "https://presearch.com/" 
     old_current_token = 0
-    num_file = 0
     num_file_str = "%s" % num_file
     # fname = "tonic" + num_file_str
-    fname = "tonic5"
+    fname = "brandy" + num_file_str
     ara = []         
     if os.path.isfile(fname):
         # File exists
@@ -205,6 +273,7 @@ def Search():
     retry = 0
     while True:
         if select_account == len_ara:
+            num_file += 1
             break
 
         print("email %s" %ara[select_account]["email"])
@@ -217,7 +286,7 @@ def Search():
         # opts.add_experimental_option('excludeSwitches', ['enable-automation'])
         # opts.add_experimental_option('useAutomationExtension', False)
         # opts.add_experimental_option('prefs', {'download_restrictions': 3})
-        # opts.headless = True  # <-- Comment this line if you want to show browser.
+        opts.headless = True  # <-- Comment this line if you want to show browser.
         # opts.add_argument("--enable-javascript")
         
         opts.add_argument('--ignore-ssl-errors=yes')
@@ -307,22 +376,15 @@ def Search():
             time.sleep(1)
             retry = 0
             current_token = 0
+            check_kloop = 0
             if old_current_token > 0:
                 current_token = old_current_token
                 old_current_token = 0
             else:
-                check_kloop = 0
                 while True:
                     try:
-                        if check_kloop > 10:
-                            check_kloop = 0
-                            while True:
-                                try:
-                                    browser.get("https://presearch.com/")
-                                    break
-                                except Exception as ex:
-                                    # print(ex)
-                                    time.sleep(0.1)
+                        if check_kloop > 30:
+                            break
 
                         current_token = browser.find_element(by=By.XPATH, value="//span[@class='extraColorTarget userInfoColor']").text
                         # current_token = browser.find_element(by=By.XPATH, value="//div[@class='tokens']").text
@@ -332,9 +394,47 @@ def Search():
                         check_kloop += 1
                         time.sleep(0.1)
 
+            if check_kloop > 30:
+                # time.sleep(1)
+                # try:
+                #     q = wordlist.gen(wl)
+                #     browser.find_element(by=By.XPATH, value="//input[@placeholder='What are you looking for today?']").send_keys(q, Keys.ENTER)
+                # except Exception as ex:
+                #     time.sleep(0.1)
+                    
+                time.sleep(2)
+                cookies = browser.get_cookies()
+                ara[select_account]["cookie"] = cookies
+                # if os.path.isfile(fname):
+                #     # File exists
+                #     with open(fname, 'w') as outfile:
+                #         json.dump(ara, outfile)
+
+                filesave = "rework" + num_file_str 
+                data = ara[select_account]
+                if os.path.isfile(filesave):
+                    # File exists
+                    araz = []
+                    with open(filesave) as jsonfile:
+                        dataz = json.load(jsonfile)
+                        dataz.append(data)
+                        araz = dataz
+                    with open(filesave, 'w') as outfile:
+                        json.dump(araz, outfile)
+                else: 
+                    # Create file
+                    with open(filesave, 'w') as outfile:
+                        array = []
+                        array.append(data)
+                        json.dump(array, outfile)
+
+                select_account += 1
+                browser.quit()
+                break
+
             # print(current_token)
             current_token_float = float(current_token)
-
+            print("current_token_float %f" %current_token_float)
             if current_token_float > 50:
                 # limit
                 ara[select_account]["progress"] = "done"
@@ -354,7 +454,6 @@ def Search():
             # new_token = ''
             # new_token_float = 0
             # check_max_per_day = 0
-            print("current_token_float %f" %current_token_float)
             # cache_token = 0
             # check_spam = 0
             # while True:
@@ -459,11 +558,28 @@ def Search():
             # if check_spam < 100:
             cookies = browser.get_cookies()
             ara[select_account]["cookie"] = cookies
-            if os.path.isfile(fname):
+            # if os.path.isfile(fname):
+            #     # File exists
+            #     with open(fname, 'w') as outfile:
+            #         json.dump(ara, outfile)
+
+            filesave = "rework" + num_file_str 
+            data = ara[select_account]
+            if os.path.isfile(filesave):
                 # File exists
-                with open(fname, 'w') as outfile:
-                    json.dump(ara, outfile)
-            
+                araz = []
+                with open(filesave) as jsonfile:
+                    dataz = json.load(jsonfile)
+                    dataz.append(data)
+                    araz = dataz
+                with open(filesave, 'w') as outfile:
+                    json.dump(araz, outfile)
+            else: 
+                # Create file
+                with open(filesave, 'w') as outfile:
+                    array = []
+                    array.append(data)
+                    json.dump(array, outfile)
             # else:
             sum_time = current_seconds_time() - start_time
             print(" time cost %d" %sum_time)
