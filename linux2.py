@@ -112,7 +112,7 @@ def Login(browser, ara, select_account):
 
     time.sleep(0.1)
     code = ara[select_account]["code"]
-    
+    start_login = current_seconds_time()
     totp = pyotp.TOTP(code)
     # print("Current OTP:", totp.now())
 
@@ -120,6 +120,8 @@ def Login(browser, ara, select_account):
     time.sleep(0.1)
     while True:
         try:
+            if current_seconds_time() - start_login > 30:
+                return -1
             browser.find_element(by=By.XPATH, value="//input[@type='number']").clear()
             browser.find_element(by=By.XPATH, value="//input[@type='number']").send_keys(fa)
             break
@@ -130,6 +132,8 @@ def Login(browser, ara, select_account):
     time.sleep(0.1)
     while True:
         try:
+            if current_seconds_time() - start_login > 30:
+                return -1
             browser.find_element(by=By.XPATH, value="//button[@class='btn btn-block btn-primary']").click()
             break
         except Exception as ex:
@@ -148,6 +152,8 @@ def Login(browser, ara, select_account):
         fa = str(totp.now())
         while True:
             try:
+                if current_seconds_time() - start_login > 30:
+                    return -1
                 browser.find_element(by=By.XPATH, value="//input[@type='number']").clear()
                 browser.find_element(by=By.XPATH, value="//input[@type='number']").send_keys(fa)
                 break
@@ -158,6 +164,8 @@ def Login(browser, ara, select_account):
         time.sleep(0.1)
         while True:
             try:
+                if current_seconds_time() - start_login > 30:
+                    return -1
                 browser.find_element(by=By.XPATH, value="//button[@class='btn btn-block btn-primary']").click()
                 break
             except Exception as ex:
@@ -174,6 +182,7 @@ def Login(browser, ara, select_account):
             time.sleep(0.1)
 
     time.sleep(3)
+    return 0
 
 # Search 30 times
 def Search():
@@ -300,7 +309,13 @@ def Search():
                 #     browser.quit()
                 #     break
                 
-            Login(browser, ara, select_account)
+            login = Login(browser, ara, select_account)
+
+            if login == -1:
+                print("reset!!!")
+                browser.quit()
+                break
+
             time.sleep(1)
             retry = 0
             current_token = 0
@@ -323,6 +338,63 @@ def Search():
                         time.sleep(0.1)
 
             if check_kloop > 30:
+                check_spam = 0
+
+                while True:
+                    try:
+                        browser.get("https://presearch.com/")
+                        break
+                    except Exception as ex:
+                        # print(ex)
+                        time.sleep(0.1)
+
+                time.sleep(1)
+
+                while True:
+                    try:
+                        if check_spam > 30:
+                            break
+                        q = wordlist.gen(wl)
+                        browser.find_element(by=By.XPATH, value="//input[@placeholder='What are you looking for today?']").send_keys(q, Keys.ENTER)
+                        time.sleep(3)
+                        if 'Oops, something went wrong with your search' not in browser.page_source and 'The request could not be satisfied' not in browser.title:
+                            break
+                        else:
+                            new_token = ''
+                            while True:
+                                try:
+                                    new_token = browser.find_element(by=By.XPATH, value="//div[@class='transition cursor-pointer flex items-center text-gray-700 hover:opacity-60 dark:text-white select-none']/span").text
+                                    break
+                                except Exception as ex:
+                                    # print(ex)
+                                    time.sleep(0.1)
+
+                            if new_token == '':
+                                time.sleep(0.1)
+                                while True:
+                                    try:
+                                        browser.get("https://presearch.com/")
+                                        break
+                                    except Exception as ex:
+                                        # print(ex)
+                                        time.sleep(0.1)
+
+                                time.sleep(1)
+                                try:
+                                    new_token = browser.find_element(by=By.XPATH, value="//span[@class='extraColorTarget userInfoColor']").text
+                                    if new_token != '':
+                                        print("new_token %s" %new_token)
+                                except Exception as ex:
+                                    # print(ex)
+                                    time.sleep(0.1)
+                            else:
+                                # new_token_float = float(new_token)
+                                print("new_token %s" %new_token)
+
+                    except Exception as ex:
+                        check_spam += 1
+                        # print(ex)
+                        time.sleep(0.1)
                 # time.sleep(1)
                 # try:
                 #     q = wordlist.gen(wl)
