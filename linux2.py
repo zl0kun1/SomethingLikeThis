@@ -14,6 +14,7 @@ import urllib.parse
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from capmonster_python import HCaptchaTask
+import pyotp
 
 app = 'PreSearch'
 wl = wordlist.get()
@@ -111,50 +112,11 @@ def Login(browser, ara, select_account):
 
     time.sleep(0.1)
     code = ara[select_account]["code"]
-    fa = ""
-    # Open a new window
-    browser.execute_script("window.open('');")
-    browser.switch_to.window(browser.window_handles[1])
-    while True:
-        try:
-            browser.get("https://get2fa.dev/")
-            break
-        except Exception as ex:
-            print(ex)
-            time.sleep(0.1)
-    # Switch to the new window
-    time.sleep(2)
-    while True:
-        try:
-            browser.find_element(by=By.XPATH, value="//*[@class='container']/div/div/input[@placeholder='The secret key (in base-32 format)']").clear()
-            browser.find_element(by=By.XPATH, value="//*[@class='container']/div/div/input[@placeholder='The secret key (in base-32 format)']").send_keys(code)
-            break
-        except Exception as ex:
-            print(ex)
+    
+    totp = pyotp.TOTP(code)
+    # print("Current OTP:", totp.now())
 
-    time.sleep(1)
-
-    while True:
-        try:
-            fa = browser.find_element(by=By.XPATH, value="//*[@class='container']/div/p[@class='title is-size-1 has-text-centered']").text
-            break
-        except Exception as ex:
-            time.sleep(0.1)
-            print(ex)
-
-    if not fa:
-        time.sleep(0.5)
-        while True:
-            try:
-                fa = browser.find_element(by=By.XPATH, value="//*[@class='container']/div/p[@class='title is-size-1 has-text-centered']").text
-                break
-            except Exception as ex:
-                time.sleep(0.1)
-                print(ex)
-
-    time.sleep(0.5)
-    browser.switch_to.window(browser.window_handles[0])
-
+    fa = str(totp.now())
     time.sleep(0.1)
     while True:
         try:
@@ -162,7 +124,7 @@ def Login(browser, ara, select_account):
             browser.find_element(by=By.XPATH, value="//input[@type='number']").send_keys(fa)
             break
         except Exception as ex:
-            print(ex)
+            # print(ex)
             time.sleep(0.1)
 
     time.sleep(0.1)
@@ -171,7 +133,7 @@ def Login(browser, ara, select_account):
             browser.find_element(by=By.XPATH, value="//button[@class='btn btn-block btn-primary']").click()
             break
         except Exception as ex:
-            print(ex)
+            # print(ex)
             time.sleep(0.1)
     time.sleep(2)
     check_error = 0
@@ -183,48 +145,14 @@ def Login(browser, ara, select_account):
 
     time.sleep(0.1)
     if check_error:
-        browser.switch_to.window(browser.window_handles[1])
-        time.sleep(1)
-
-        while True:
-            try:
-                browser.find_element(by=By.XPATH, value="//*[@class='container']/div/div/input[@placeholder='The secret key (in base-32 format)']").clear()
-                browser.find_element(by=By.XPATH, value="//*[@class='container']/div/div/input[@placeholder='The secret key (in base-32 format)']").send_keys(code)
-                break
-            except Exception as ex:
-                print(ex)
-
-        time.sleep(1)
-        fa = ""
-        while True:
-            try:
-                fa = browser.find_element(by=By.XPATH, value="//*[@class='container']/div/p[@class='title is-size-1 has-text-centered']").text
-                break
-            except Exception as ex:
-                time.sleep(0.1)
-                print(ex)
-
-        if not fa:
-            time.sleep(0.5)
-            while True:
-                try:
-                    fa = browser.find_element(by=By.XPATH, value="//*[@class='container']/div/p[@class='title is-size-1 has-text-centered']").text
-                    break
-                except Exception as ex:
-                    time.sleep(0.1)
-                    print(ex)
-
-        time.sleep(0.5)
-        browser.switch_to.window(browser.window_handles[0])
-
-        time.sleep(0.1)
+        fa = str(totp.now())
         while True:
             try:
                 browser.find_element(by=By.XPATH, value="//input[@type='number']").clear()
                 browser.find_element(by=By.XPATH, value="//input[@type='number']").send_keys(fa)
                 break
             except Exception as ex:
-                print(ex)
+                # print(ex)
                 time.sleep(0.1)
 
         time.sleep(0.1)
@@ -233,7 +161,7 @@ def Login(browser, ara, select_account):
                 browser.find_element(by=By.XPATH, value="//button[@class='btn btn-block btn-primary']").click()
                 break
             except Exception as ex:
-                print(ex)
+                # print(ex)
                 time.sleep(0.1)
         time.sleep(2)
 
