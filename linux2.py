@@ -211,6 +211,7 @@ def Search():
     while True:
         if select_account == len_ara:
             num_file += 1
+            select_account = 0
             break
 
         print("email %s" %ara[select_account]["email"])
@@ -339,7 +340,7 @@ def Search():
 
             if check_kloop > 30:
                 check_spam = 0
-
+                print("loop")
                 while True:
                     try:
                         browser.get("https://presearch.com/")
