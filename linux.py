@@ -49,7 +49,7 @@ def Search():
     num_file = 0
     num_file_str = "%s" % num_file
     # fname = "tonic" + num_file_str
-    fname = "brandy16"
+    fname = "red9"
     ara = []         
     if os.path.isfile(fname):
         # File exists
@@ -68,7 +68,7 @@ def Search():
         progress = ara[select_account]["progress"]
         if progress == "done":
             select_account -= 1
-            browser.quit()
+            #browser.quit()
             continue
         # if select_account == len_ara:
         #     num_file += 1
@@ -250,7 +250,7 @@ def Search():
                 time.sleep(0.1)
 
             if check_login == 0:
-                if retry == 3:
+                if retry == 10:
                     retry = 0
                     # select_account += 1
                     select_account -= 1
