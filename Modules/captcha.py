@@ -2,7 +2,7 @@
 # Youtube Channel https://www.youtube.com/c/AutoAlmostEverything
 # Please read README.md carefully before use
 
-# Solve captcha by using https://2captcha.com?from=11528745.
+# Solve captcha by using 2Captcha, register here https://2captcha.com?from=11528745.
 
 import requests, time
 
@@ -24,6 +24,7 @@ class Captcha:
                 id = req.text.split('|')[1]
             result = ''
             if id != '':
+                retry = 36  # <-- Wait for 1m30s
                 while True:
                     time.sleep(2.5)
                     link = 'http://2captcha.com/res.php?key=%s&action=get&id=%s'
@@ -31,6 +32,11 @@ class Captcha:
                     if 'OK|' in req.text:
                         result = req.text.split('|')[1]
                         break
+                    else:
+                        retry -= 1
+                        if retry == 0:
+                            result = "Expired"
+                            break
             return result
         elif self.service == 'CapMonster':
             link = 'https://api.capmonster.cloud/createTask'
@@ -49,6 +55,7 @@ class Captcha:
                 id = req.json()['taskId']
             result = ''
             if id != '':
+                retry = 36  # <-- Wait for 1m30s
                 while True:
                     time.sleep(2.5)
                     link = 'https://api.capmonster.cloud/getTaskResult'
@@ -62,35 +69,9 @@ class Captcha:
                         'solution']:
                         result = req.json()['solution']['gRecaptchaResponse']
                         break
-            return result
-        elif self.service == 'AntiCaptcha':
-            link = 'https://api.anti-captcha.com/createTask'
-            json = {
-                'clientKey': self.APIKey,
-                'task':
-                    {
-                        'type': 'RecaptchaV2TaskProxyless',
-                        'websiteURL': pageurl,
-                        'websiteKey': sitekey,
-                    }
-            }
-            req = requests.post(link, json=json, timeout=30)
-            id = ''
-            if 'errorId' in req.json() and req.json()['errorId'] == 0 and 'taskId' in req.json():
-                id = req.json()['taskId']
-            result = ''
-            if id != '':
-                while True:
-                    time.sleep(2.5)
-                    link = 'https://api.anti-captcha.com/getTaskResult '
-                    json = {
-                        'clientKey': self.APIKey,
-                        'taskId': id,
-                    }
-                    req = requests.post(link, json=json, timeout=30)
-                    if 'errorId' in req.json() and req.json()['errorId'] == 0 and 'status' in req.json() and req.json()[
-                        'status'] == 'ready' and 'solution' in req.json() and 'gRecaptchaResponse' in req.json()[
-                        'solution']:
-                        result = req.json()['solution']['gRecaptchaResponse']
-                        break
+                    else:
+                        retry -= 1
+                        if retry == 0:
+                            result = "Expired"
+                            break
             return result

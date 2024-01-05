@@ -2,6 +2,8 @@
 # Youtube Channel https://www.youtube.com/c/AutoAlmostEverything
 # Please read README.md carefully before use
 
+# Solve captcha by using 2Captcha, register here https://2captcha.com?from=11528745.
+
 from datetime import datetime
 
 
