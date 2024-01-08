@@ -55,8 +55,7 @@ def new_driver():
     browser.set_window_position(0, 0)
     browser.maximize_window()
     browser.delete_all_cookies()
-    browsers.append(browser)
-    indexin = 2
+    indexin = 3
     gmailz = "hungntasd12081995azj" + str(indexin) + "@gmail.com"
     print(gmailz)
     
