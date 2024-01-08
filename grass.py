@@ -39,26 +39,8 @@ def getPasswordExtended():
 def current_seconds_time():
     return round(time.time())
 
-indexin = 0
-threads = []
-lock = Lock()
-browsers = []
-
-def START():
-    global indexin
-    while True:
-        if len(threads) < 20:
-            t = Thread(target=new_driver)
-            threads.append(t)
-            t.start()
-            # lock.release()
-            time.sleep(10)
-        else:
-            input("")
 
 def new_driver():
-    global indexin
-    
     opts = Options()    
     opts.binary_location = "/usr/bin/google-chrome"
     opts.add_argument('--ignore-ssl-errors=yes')
@@ -73,13 +55,13 @@ def new_driver():
     browser.maximize_window()
     browser.delete_all_cookies()
     browsers.append(browser)
-    indexin += 1
+    indexin = 1
     gmailz = "hungntasd12081995azj" + str(indexin) + "@gmail.com"
     print(gmailz)
     
     while True:
         try:
-            browser.get("chrome-extension://ilehaonighjijnmpnagapkhpcdbhclfg/index.html#")
+            browser.get("https://app.getgrass.io/")
             break
         except Exception as ex: 
             time.sleep(0.1)
@@ -107,42 +89,6 @@ def new_driver():
         except Exception as ex:
             time.sleep(0.1)
 
-    #reconnect 1' 
-        
-    time.sleep(3)
+    input("...")
 
-    while True:
-        checkz = 0
-        try:
-            browser.find_element("xpath", '//button[@type="submit"]').click()
-        except Exception as ex:
-            time.sleep(0.1)
-            
-        while True:
-            try:
-                div = browser.find_element("xpath", '//div[@class="css-165yn1q"]')
-                if div.text == "Disconnected":
-                    checkz = 1
-                break
-            except Exception as ex:
-                time.sleep(0.1)
-        if checkz == 1:
-            while True:
-                try:
-                    browser.find_element("xpath", '//button[@id="menu-button-:r3:"]').click()
-                    break
-                except Exception as ex:
-                    time.sleep(0.1)
-            time.sleep(0.5)
-            while True:
-                try:
-                    browser.find_element("xpath", '//button[@id="menu-list-:r3:-menuitem-:r4:"]').click()
-                    break
-                except Exception as ex:
-                    time.sleep(0.1)
-        else:
-            print(gmailz + "Connected")
-        time.sleep(15)
-    # input("...")
-
-START()
+new_driver()
