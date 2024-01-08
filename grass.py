@@ -20,7 +20,7 @@ from Modules import log, captcha
 import json
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-DRIVER_BIN = os.path.join(os.getcwd(), "Drivers/chromedriver104linux")
+DRIVER_BIN = os.path.join(os.getcwd(), "Drivers/chromedriverlinux114")
 Grass = os.path.join(os.getcwd(), "Grass.crx")
 
 proxyAPIKEY = "192.168.31.102:49579"
@@ -47,15 +47,16 @@ def new_driver():
     opts.add_argument('--ignore-certificate-errors')
     opts.add_argument("--no-sandbox")
     opts.add_argument("--disable-gpu")
+    opts.add_argument("--disable-dev-shm-usage")
     opts.add_extension(Grass)
     opts.add_argument("--enable-javascript")
     opts.add_argument("--headless")
     s = Service(DRIVER_BIN)
     browser = webdriver.Chrome(options=opts, service=s)
-    browser.set_window_position(0, 0)
-    browser.maximize_window()
-    browser.delete_all_cookies()
-    indexin = 3
+    #browser.set_window_position(0, 0)
+    #browser.maximize_window()
+    #browser.delete_all_cookies()
+    indexin = 4
     gmailz = "hungntasd12081995azj" + str(indexin) + "@gmail.com"
     print(gmailz)
     
